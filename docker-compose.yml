@@ -16,10 +16,30 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
       - ./data:/app/data
-      - ~/.kaggle:/root/.kaggle
+      - ${HOME}/.kaggle:/root/.kaggle:ro  # Read-only mount of Kaggle credentials
     environment:
       - PYTHONPATH=/app
-    command: python -m services.extract.main
+      - DATA_SOURCE=${DATA_SOURCE:-kaggle}  # Default to kaggle if not set
+      - KAGGLE_USERNAME=${KAGGLE_USERNAME:-}  # Optional Kaggle credentials
+      - KAGGLE_KEY=${KAGGLE_KEY:-}  # Optional Kaggle credentials
+    command: >
+      bash -c '
+        echo "Checking Kaggle credentials..."
+        if [ -f /root/.kaggle/kaggle.json ]; then
+          echo "Found kaggle.json"
+          ls -l /root/.kaggle/kaggle.json
+        else
+          echo "No kaggle.json found"
+        fi
+        if [ "$DATA_SOURCE" = "kaggle" ] && [ ! -f /root/.kaggle/kaggle.json ] && [ -z "$KAGGLE_USERNAME" ] && [ -z "$KAGGLE_KEY" ]; then
+          echo "Error: Kaggle credentials not found. Please either:"
+          echo "1. Place kaggle.json in ~/.kaggle/ directory, or"
+          echo "2. Set KAGGLE_USERNAME and KAGGLE_KEY environment variables, or"
+          echo "3. Use DATA_SOURCE=archive to use local data"
+          exit 1
+        fi
+        python -m services.extract.main
+      '
 
   transform:
     build:
@@ -47,4 +67,4 @@ services:
       - postgres
 
 volumes:
-  postgres_data: 
+  postgres_data:

@@ -15,7 +15,7 @@ We use historical FIFA player data (2015–2021) and process it through an ETL p
 .
 ├── config/                   # Configuration and settings
 ├── data/
-│   ├── archive/              # (Optional) Archive of raw CSVs
+│   ├── archive/              # Local archive data
 │   ├── kagglehub/            # Downloaded Kaggle datasets
 │   ├── processed/            # Transformed data (Parquet)
 │   └── raw/                  # Raw CSVs for processing
@@ -92,8 +92,18 @@ If you don't have Kaggle credentials or prefer manual download:
 
 ### 4. Build and Run the Pipeline
 
+#### Using Kaggle Data Source (Default)
+
 ```sh
 docker-compose up --build
+```
+
+#### Using Archive Data Source
+
+If you have the data files locally in the `data/archive` directory:
+
+```sh
+DATA_SOURCE=archive docker-compose up --build
 ```
 
 This will:
