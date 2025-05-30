@@ -1,21 +1,27 @@
 # Core
-pandas>=1.5.0
-dask[dataframe]>=2023.0.0
-numpy>=1.21
+pandas>=2.2.0
+dask[dataframe,distributed,complete]>=2024.2.0
+numpy>=1.26.0
+pyarrow>=12.0.0
+snappy>=0.6.0
 
 # Dataset download
-kagglehub>=0.3.12
+kagglehub>=0.2.0
 # DB Interaction
-sqlalchemy>=1.4
-psycopg2-binary>=2.9  # or replace with appropriate DB driver
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.9
 
 # For pipeline APIs
 fastapi>=0.95
 uvicorn[standard]>=0.22
 
 # For environment/config
-python-dotenv>=1.0
-rich>=14.0.0
+python-dotenv>=1.0.0
+rich>=13.7.0
 
 # Dev & Testing
 pytest>=7.2
+
+# Monitoring & Logging
+prometheus-client>=0.16.0
+python-json-logger>=2.0.0

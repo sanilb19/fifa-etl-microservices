@@ -1,29 +1,50 @@
-version: '3.9'
-
 services:
-  db:
+  postgres:
     image: postgres:15
-    container_name: fifa_postgres
-    restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fifa
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fifa_db
     ports:
       - "5432:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
-  etl:
-    build: .
-    container_name: fifa_etl
-    depends_on:
-      - db
-    environment:
-      - DB_CONNECTION_STRING=postgresql://postgres:postgres@db:5432/fifa
+  extract:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
     volumes:
       - ./data:/app/data
-    command: ["python", "main.py"]
+      - ~/.kaggle:/root/.kaggle
+    environment:
+      - PYTHONPATH=/app
+    command: python -m services.extract.main
+
+  transform:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+    command: python -m services.transform.main
+    depends_on:
+      - extract
+
+  load:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+    command: python -m services.load.main
+    depends_on:
+      - transform
+      - postgres
 
 volumes:
-  pg_data:
+  postgres_data: 
