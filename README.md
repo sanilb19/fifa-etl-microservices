@@ -47,8 +47,8 @@ We use historical FIFA player data (2015–2021) and process it through an ETL p
 ### 1. Clone the Repo
 
 ```sh
-git clone https://github.com/yourname/fifa-etl-dask.git
-cd fifa-etl-dask
+git clone https://github.com/sanilb19/fifa-etl-microservices.git
+cd fifa-etl-microservices
 ```
 
 ### 2. Set Up Environment Variables
