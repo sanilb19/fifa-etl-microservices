@@ -1,0 +1,22 @@
+# Ignore .env file
+.env
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore virtual environment directories
+etl-env/
+venv/
+env/
+
+# Ignore IDE files
+.idea/
+.vscode/
+
+# Ignore Docker volumes
+pg_data/ 
+
+# Ignore Downloaded datasets
+data/*

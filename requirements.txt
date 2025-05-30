@@ -1,0 +1,21 @@
+# Core
+pandas>=1.5.0
+dask[dataframe]>=2023.0.0
+numpy>=1.21
+
+# Dataset download
+kagglehub>=0.3.12
+# DB Interaction
+sqlalchemy>=1.4
+psycopg2-binary>=2.9  # or replace with appropriate DB driver
+
+# For pipeline APIs
+fastapi>=0.95
+uvicorn[standard]>=0.22
+
+# For environment/config
+python-dotenv>=1.0
+rich>=14.0.0
+
+# Dev & Testing
+pytest>=7.2

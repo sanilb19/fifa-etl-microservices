@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: fifa_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fifa
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  etl:
+    build: .
+    container_name: fifa_etl
+    depends_on:
+      - db
+    environment:
+      - DB_CONNECTION_STRING=postgresql://postgres:postgres@db:5432/fifa
+    volumes:
+      - ./data:/app/data
+    command: ["python", "main.py"]
+
+volumes:
+  pg_data:
