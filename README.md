@@ -62,9 +62,35 @@ DASK_WORKERS=4
 DASK_MEMORY_LIMIT=4GB
 ```
 
-> **Note:** For Kaggle downloads, place your `kaggle.json` credentials in `~/.kaggle/`.
+### 3. Prepare the Data
 
-### 3. Build and Run the Pipeline
+You have two options to get the FIFA dataset:
+
+#### Option A: Using Kaggle API (Recommended)
+1. Create a Kaggle account if you don't have one
+2. Go to your Kaggle account settings
+3. Create a new API token (this will download `kaggle.json`)
+4. Place `kaggle.json` in `~/.kaggle/` directory
+5. Ensure the file has correct permissions:
+   ```sh
+   chmod 600 ~/.kaggle/kaggle.json
+   ```
+
+#### Option B: Manual Download
+If you don't have Kaggle credentials or prefer manual download:
+1. Download the dataset from [FIFA 21 Complete Player Dataset](https://www.kaggle.com/datasets/stefanoleone992/fifa-21-complete-player-dataset/data)
+2. Extract the downloaded zip file
+3. Place the extracted folder named 'archive' in the `./data` directory
+4. The structure should look like:
+   ```
+   data/
+   └── archive/
+       ├── players_15.csv
+       ├── players_16.csv
+       └── ...
+   ```
+
+### 4. Build and Run the Pipeline
 
 ```sh
 docker-compose up --build
