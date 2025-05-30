@@ -66,7 +66,7 @@ DASK_MEMORY_LIMIT=4GB
 
 You have two options to get the FIFA dataset:
 
-#### Option A: Using Kaggle API (Recommended)
+#### Option A: Using Kaggle API
 1. Create a Kaggle account if you don't have one
 2. Go to your Kaggle account settings
 3. Create a new API token (this will download `kaggle.json`)
