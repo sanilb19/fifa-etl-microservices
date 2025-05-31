@@ -139,9 +139,39 @@ Data is shared between services via the `data/` directory.
 
 ## 🧼 Clean Up
 
+### Quick Cleanup
+To remove all generated data and start fresh:
+
 ```sh
-docker-compose down -v  # Stops and removes containers and volumes
+./scripts/cleanup.sh
 ```
+
+This will:
+- Stop all running containers
+- Remove all files from `data/raw/`, `data/processed/`, and `data/kaggle/`
+- Remove the PostgreSQL volume
+
+### Manual Cleanup
+If you prefer to clean up manually:
+
+1. Stop containers:
+```sh
+docker-compose down
+```
+
+2. Remove data directories:
+```sh
+rm -rf data/raw/*
+rm -rf data/processed/*
+rm -rf data/kaggle/*
+```
+
+3. Remove database volume:
+```sh
+docker volume rm etl_with_dask_postgres_data
+```
+
+Note: The `archive` directory is preserved during cleanup as it contains your source data.
 
 ---
 

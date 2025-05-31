@@ -9,6 +9,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   extract:
     build:
@@ -39,7 +44,14 @@ services:
           exit 1
         fi
         python -m services.extract.main
+        # Keep container running after completion
+        tail -f /dev/null
       '
+    healthcheck:
+      test: ["CMD-SHELL", "ls /app/data/raw/*.csv >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   transform:
     build:
@@ -49,9 +61,20 @@ services:
       - ./data:/app/data
     environment:
       - PYTHONPATH=/app
-    command: python -m services.transform.main
+    command: >
+      bash -c '
+        python -m services.transform.main
+        # Keep container running after completion
+        tail -f /dev/null
+      '
     depends_on:
-      - extract
+      extract:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "ls /app/data/processed/*.parquet >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   load:
     build:
@@ -61,10 +84,17 @@ services:
       - ./data:/app/data
     environment:
       - PYTHONPATH=/app
-    command: python -m services.load.main
+    command: >
+      bash -c '
+        python -m services.load.main
+        # Keep container running after completion
+        tail -f /dev/null
+      '
     depends_on:
-      - transform
-      - postgres
+      transform:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:
